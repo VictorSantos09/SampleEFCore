@@ -55,7 +55,7 @@
 
     private void Delete(int id)
     {
-        _service.Delete(id);
+        _service.DeleteAsync(id);
         _navManager.NavigateTo(_navManager.Uri, true);
     }
 }

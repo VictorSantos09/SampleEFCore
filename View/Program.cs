@@ -2,9 +2,8 @@ using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using MudBlazor.Services;
 using Sample.Core.Config;
 using View.Data;
-using View.Shared;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
 
@@ -13,12 +12,12 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddMudServices();
 SampleConfiguration.ConfigureServices(builder.Services);
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
+    _ = app.UseExceptionHandler("/Error");
+    _ = app.UseHsts();
 }
 
 app.UseHttpsRedirection();

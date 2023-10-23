@@ -27,4 +27,12 @@
     <ProjectReference Include="..\..\Core\Sample.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\victo\Desktop\SampleEFCoreApp\View\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\victo\Desktop\SampleEFCoreApp\View\.editorconfig" />
+  </ItemGroup>
+
 </Project>

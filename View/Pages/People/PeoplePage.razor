@@ -53,9 +53,9 @@
         _dialogService.Show(typeof(EditPersonDialog), "Editar Pessoa", parameters, options);
     }
 
-    private void Delete(int id)
+    private async Task Delete(int id)
     {
-        _service.DeleteAsync(id);
+        await _service.DeleteAsync(id);
         _navManager.NavigateTo(_navManager.Uri, true);
     }
 }

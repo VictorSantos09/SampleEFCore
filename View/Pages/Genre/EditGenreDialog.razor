@@ -33,7 +33,7 @@
         {
             GenreModel genre = await _service.GetByIdAsync(Id);
             genre.Name = Name;
-            await _service.UpdateAsync(genre);
+            await _service.UpdateAsync(Id, genre);
             _navManager.NavigateTo(_navManager.Uri, true);
         }
     }

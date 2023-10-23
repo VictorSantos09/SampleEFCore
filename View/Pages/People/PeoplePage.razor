@@ -1,0 +1,61 @@
+﻿@page "/people"
+@inject PersonService _service
+@inject IDialogService _dialogService
+@inject NavigationManager _navManager
+
+@foreach (var p in _people)
+{
+    <MudCard Class="mt-5">
+        <MudCardContent>
+            <MudText>@p.FirstName</MudText>
+            <MudText Typo="Typo.body2">Nome Completo: @p.FullName</MudText>
+            <MudText Typo="Typo.body2">ID: @p.Id</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" @onclick="() => OpenEditDialog(p.Id, p.FirstName, p.LastName)">Editar</MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" @onclick="() => Delete(p.Id)">Remover</MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+
+@if (_people.Any() == false)
+{
+    <MudAlert Severity="Severity.Info">Nenhuma pessoa cadastrada</MudAlert>
+}
+
+<MudButton Class="mt-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
+    <MudIcon Icon="@Icons.Material.Filled.Add" />
+    Adicionar
+</MudButton>
+
+@code {
+    private IEnumerable<PersonModel> _people = new List<PersonModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _people = await _service.GetAllAsync();
+    }
+
+    private void OpenAddDialog()
+    {
+        DialogOptions options = new() { CloseButton = true };
+        _dialogService.Show(typeof(AddPersonDialog), "Cadastrar Pessoa", options);
+    }
+
+    private void OpenEditDialog(int id, string firstName, string LastName)
+    {
+        DialogParameters parameters = new();
+        parameters.Add("Id", id);
+        parameters.Add("FirstName", firstName);
+        parameters.Add("LastName", LastName);
+
+        DialogOptions options = new() { CloseButton = true };
+        _dialogService.Show(typeof(EditPersonDialog), "Editar Pessoa", parameters, options);
+    }
+
+    private void Delete(int id)
+    {
+        _service.Delete(id);
+        _navManager.NavigateTo(_navManager.Uri, true);
+    }
+}

@@ -2,36 +2,34 @@
 @inject GenreService _service
 @inject IDialogService _dialogService
 
-@if (_genres.Any())
-{
-    <MudTable Items="@_genres" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_isLoading" LoadingProgressColor="Color.Info">
-        <HeaderContent>
-            <MudTh>Nome</MudTh>
-            <MudTh>Remover</MudTh>
-            <MudTh>Editar</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Nome">
-                @context.Name
-            </MudTd>
-            <MudTd DataLabel="Remover">
-                <MudIconButton @onclick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete"></MudIconButton>
-            </MudTd>
-            <MudTd DataLabel="Editar">
-                <MudIconButton @onclick="() => OpenEditDialog(context.Id, context.Name)" Icon="@Icons.Filled.Edit"></MudIconButton>
-            </MudTd>
-        </RowTemplate>
-    </MudTable>
+<MudTable Items="@_genres" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_isLoading" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Nome</MudTh>
+        <MudTh>Remover</MudTh>
+        <MudTh>Editar</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nome">
+            @context.Name
+        </MudTd>
+        <MudTd DataLabel="Remover">
+            <MudIconButton @onclick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete"></MudIconButton>
+        </MudTd>
+        <MudTd DataLabel="Editar">
+            <MudIconButton @onclick="() => OpenEditDialog(context.Id, context.Name)" Icon="@Icons.Filled.Edit"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
 
-    <MudButton Class="mt-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
-        <MudIcon Icon="@Icons.Material.Filled.Add" />
-        Adicionar
-    </MudButton>
-}
-else
+@if (_genres.Any() == false && _isLoading == false)
 {
     <MudAlert Severity="Severity.Info">Nenhum gênero cadastrado</MudAlert>
 }
+
+<MudButton Class="mt-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
+    <MudIcon Icon="@Icons.Material.Filled.Add" />
+    Adicionar
+</MudButton>
 
 @code {
     private IEnumerable<GenreModel> _genres = new List<GenreModel>();

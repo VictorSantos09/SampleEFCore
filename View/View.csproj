@@ -35,4 +35,13 @@
     <None Include="C:\Users\victo\Desktop\SampleEFCoreApp\View\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Pages\Movie\AddMovieDialog.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Pages\Movie\EditMovieDialog.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

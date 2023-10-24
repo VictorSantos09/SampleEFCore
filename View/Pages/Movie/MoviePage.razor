@@ -1,29 +1,37 @@
-﻿@page "/genre"
-@inject GenreService _service
+﻿@page "/movie"
+@inject MovieService _service
 @inject IDialogService _dialogService
 
-<MudTable Items="@_genres" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_isLoading" LoadingProgressColor="Color.Info">
+<MudTable Items="@_movies" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_isLoading" LoadingProgressColor="Color.Info">
     <HeaderContent>
-        <MudTh>Nome</MudTh>
+        <MudTh>Titulo</MudTh>
+        <MudTh>Descrição</MudTh>
+        <MudTh>Gênero</MudTh>
         <MudTh>Remover</MudTh>
         <MudTh>Editar</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Nome">
-            @context.Name
+        <MudTd DataLabel="Titulo">
+            @context.Title
+        </MudTd>
+        <MudTd DataLabel="Descrição">
+            @context.Description
+        </MudTd>
+        <MudTd DataLabel="Gênero">
+            @context.Genre.Name
         </MudTd>
         <MudTd DataLabel="Remover">
             <MudIconButton @onclick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete"></MudIconButton>
         </MudTd>
         <MudTd DataLabel="Editar">
-            <MudIconButton @onclick="() => OpenEditDialog(context.Id, context.Name)" Icon="@Icons.Filled.Edit"></MudIconButton>
+            <MudIconButton @onclick="() => OpenEditDialog(context.Id, context.Title)" Icon="@Icons.Filled.Edit"></MudIconButton>
         </MudTd>
     </RowTemplate>
 </MudTable>
 
-@if (_genres.Any() == false)
+@if (_movies.Any() == false)
 {
-    <MudAlert Severity="Severity.Info">Nenhum gênero cadastrado</MudAlert>
+    <MudAlert Severity="Severity.Info">Nenhum filme cadastrado</MudAlert>
 }
 
 <MudButton Class="mt-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
@@ -32,25 +40,24 @@
 </MudButton>
 
 @code {
-    private IEnumerable<GenreModel> _genres = new List<GenreModel>();
+    private IEnumerable<MovieModel> _movies = new List<MovieModel>();
     private bool _isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        _genres = await _service.GetAllAsync();
+        _movies = await _service.GetAllAsync();
         _isLoading = false;
     }
-
     private async Task Delete(int id)
     {
         await _service.DeleteAsync(id);
         await OnInitializedAsync();
     }
 
-    private void OpenAddDialog()
+    private async Task OpenAddDialog()
     {
         DialogOptions options = new DialogOptions() { CloseButton = true };
-        _dialogService.Show<AddGenreDialog>("Adicionar Gênero", options);
+        _dialogService.Show<AddMovieDialog>("Adicionar Filme", options);
     }
 
     private void OpenEditDialog(int id, string genreName)
@@ -58,9 +65,9 @@
         DialogOptions options = new DialogOptions() { CloseButton = true };
 
         DialogParameters parameters = new();
-        parameters.Add("Id", id);
-        parameters.Add("GenreName", genreName);
+        // parameters.Add("Id", id);
+        // parameters.Add("GenreName", genreName);
 
-        _dialogService.Show(typeof(EditGenreDialog), "Editar Gênero", parameters, options);
+        _dialogService.Show(typeof(EditGenreDialog), "Editar Filme", parameters, options);
     }
 }

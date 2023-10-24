@@ -1,0 +1,55 @@
+﻿@inject IDialogService _dialogService
+@inject MovieService _service
+@inject GenreService _genreService
+@inject NavigationManager _navManager
+@using System.ComponentModel.DataAnnotations
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper Class="pa-4">
+            <MudForm @ref="_form" @bind-IsValid="@_success">
+                <MudTextField T="string" Label="Título" Required="true" @bind-Value="_title" RequiredError="Título do filme é necessário" />
+                <MudTextField T="string" Label="Descrição" Required="true" @bind-Value="_description" RequiredError="Descrição do filme é necessário" />
+
+                <MudSelect T="string" @bind-Value="_genreName" Label="Selecione o Gênero" Required="true" OpenIcon="@Icons.Material.Filled.Category" AdornmentColor="Color.Dark">
+                    @foreach (GenreModel g in _genres)
+                    {
+                        <MudSelectItem Value="@g.Name">@g.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudForm>
+        </MudPaper>
+        <MudPaper Class="d-block pa-4 mt-4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(() => Submit())">Salvar</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.ResetAsync())" Class="mx-2">Apagar Dados</MudButton>
+            <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="@(() => _form.ResetValidation())">Cancelar Validação</MudButton>
+        </MudPaper>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    private bool _success;
+    private MudForm _form;
+    private string _title;
+    private string _description;
+    private string _genreName;
+    private int _genreId;
+    private IEnumerable<GenreModel> _genres = new List<GenreModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _genres = await _genreService.GetAllAsync();
+    }
+
+    private async Task Submit()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            var genre = new GenreModel(_genreId, _genreName);
+            MovieModel movie = new(_title, _description, genre, _genreId);
+            await _service.CreateAsync(movie);
+            _navManager.NavigateTo(_navManager.Uri, true);
+        }
+    }
+}

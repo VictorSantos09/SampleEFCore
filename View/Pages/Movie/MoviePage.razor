@@ -24,7 +24,7 @@
             <MudIconButton @onclick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete"></MudIconButton>
         </MudTd>
         <MudTd DataLabel="Editar">
-            <MudIconButton @onclick="() => OpenEditDialog(context.Id, context.Title)" Icon="@Icons.Filled.Edit"></MudIconButton>
+            <MudIconButton @onclick="() => OpenEditDialog(context.Id, context.Title, context.Description)" Icon="@Icons.Filled.Edit"></MudIconButton>
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -60,14 +60,15 @@
         _dialogService.Show<AddMovieDialog>("Adicionar Filme", options);
     }
 
-    private void OpenEditDialog(int id, string genreName)
+    private void OpenEditDialog(int id, string movieTitle, string movieDescription)
     {
         DialogOptions options = new DialogOptions() { CloseButton = true };
 
         DialogParameters parameters = new();
-        // parameters.Add("Id", id);
-        // parameters.Add("GenreName", genreName);
+        parameters.Add("Id", id);
+        parameters.Add("Title", movieTitle);
+        parameters.Add("Description", movieDescription);
 
-        _dialogService.Show(typeof(EditGenreDialog), "Editar Filme", parameters, options);
+        _dialogService.Show(typeof(EditMovieDialog), "Editar Filme", parameters, options);
     }
 }

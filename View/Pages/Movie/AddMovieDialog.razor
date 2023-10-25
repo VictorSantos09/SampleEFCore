@@ -8,8 +8,13 @@
     <DialogContent>
         <MudPaper Class="pa-4">
             <MudForm @ref="_form" @bind-IsValid="@_success">
-                <MudTextField T="string" Label="Título" Required="true" @bind-Value="_title" MaxLength="45" RequiredError="Título do filme é necessário" />
-                <MudTextField T="string" Label="Descrição" Required="true" @bind-Value="_description" MaxLength="200" RequiredError="Descrição do filme é necessário" />
+                <MudTextField T="string" Label="Título" Required="true" @bind-Value="_title"
+                              Counter="45" MaxLength="45" Immediate="true"
+                              Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsTitle))" RequiredError="Título do filme é necessário" />
+
+                <MudTextField T="string" Label="Descrição" Required="true" @bind-Value="_description"
+                              Counter="200" MaxLength="200" Immediate="true"
+                              Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsDescription))" RequiredError="Descrição do filme é necessário" />
 
                 <MudSelect T="string" @bind-Value="_genreName" Label="Selecione o Gênero" Required="true" OpenIcon="@Icons.Material.Filled.Category" AdornmentColor="Color.Dark">
                     @foreach (GenreModel g in _genres)
@@ -47,7 +52,7 @@
         {
             var genre = await _genreService.GetByNameAsync(_genreName);
             MovieModel movie = new(_title, _description, genre, genre.Id);
-          var result = await _service.CreateAsync(movie);
+            var result = await _service.CreateAsync(movie);
             _navManager.NavigateTo(_navManager.Uri, true);
         }
     }

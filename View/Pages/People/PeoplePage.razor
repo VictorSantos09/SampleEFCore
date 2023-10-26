@@ -3,6 +3,11 @@
 @inject IDialogService _dialogService
 @inject NavigationManager _navManager
 
+<MudButton Class="mb-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
+    <MudIcon Icon="@Icons.Material.Filled.Add" />
+    Adicionar
+</MudButton>
+
 @foreach (var p in _people)
 {
     <MudCard Class="mt-5">
@@ -22,11 +27,6 @@
 {
     <MudAlert Severity="Severity.Info">Nenhuma pessoa cadastrada</MudAlert>
 }
-
-<MudButton Class="mt-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
-    <MudIcon Icon="@Icons.Material.Filled.Add" />
-    Adicionar
-</MudButton>
 
 @code {
     private IEnumerable<PersonModel> _people = new List<PersonModel>();

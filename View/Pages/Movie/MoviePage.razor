@@ -2,6 +2,12 @@
 @inject MovieService _service
 @inject IDialogService _dialogService
 
+
+<MudButton Class="mb-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
+    <MudIcon Icon="@Icons.Material.Filled.Add" />
+    Adicionar
+</MudButton>
+
 <MudTable Items="@_movies" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_isLoading" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Titulo</MudTh>
@@ -33,11 +39,6 @@
 {
     <MudAlert Severity="Severity.Info">Nenhum filme cadastrado</MudAlert>
 }
-
-<MudButton Class="mt-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
-    <MudIcon Icon="@Icons.Material.Filled.Add" />
-    Adicionar
-</MudButton>
 
 @code {
     private IEnumerable<MovieModel> _movies = new List<MovieModel>();

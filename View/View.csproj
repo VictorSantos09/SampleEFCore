@@ -36,12 +36,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Pages\Movie\AddMovieDialog.razor">
+    <Content Update="Components\Movies\AddMovieDialog.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Update="Pages\Movie\EditMovieDialog.razor">
+    <Content Update="Components\Movies\EditMovieDialog.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Dialog\" />
+    <Folder Include="Components\Selects\" />
   </ItemGroup>
 
 </Project>

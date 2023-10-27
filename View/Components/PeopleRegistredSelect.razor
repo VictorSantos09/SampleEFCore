@@ -1,0 +1,19 @@
+﻿@inject IService<PersonModel> _service
+
+<MudSelect @bind-Value="_person" Label="Pessoa" Text="Selecione a pessoa" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+    @foreach (var item in _people)
+    {
+        <MudSelectItem T="PersonModel" Value="item">@item.FullName</MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    private IEnumerable<PersonModel> _people = new List<PersonModel>();
+    private PersonModel _person = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _people = await _service.GetAllAsync();
+    }
+}

@@ -1,0 +1,34 @@
+﻿@inject PeopleMoviesService _service
+@inject NavigationManager _navManager
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper Class="pa-4">
+            <MudForm @ref="_form" @bind-IsValid="@_success">
+                <PeopleRegistredSelect/>
+                <MovieRegistredSelect/>
+            </MudForm>
+        </MudPaper>
+        <MudPaper Class="d-block pa-4 mt-4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(() => Submit())">Salvar</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.ResetAsync())" Class="mx-2">Apagar Dados</MudButton>
+        </MudPaper>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    private bool _success;
+    private MudForm _form;
+    private int _movieId;
+    private int _personId;
+
+    private async Task Submit()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            _ = await _service.WatchMovieAsync(6, 4);
+            _navManager.NavigateTo(_navManager.Uri, true);
+        }
+    }
+}

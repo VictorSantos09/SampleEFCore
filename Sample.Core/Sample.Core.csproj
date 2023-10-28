@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>net7.0</TargetFramework>
-	  <Nullable>enable</Nullable>
-	  <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,30 +19,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MudBlazor" Version="6.11.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Sample.Core.csproj" />
-    <ProjectReference Include="..\Sample.Core\Sample.Core.csproj" />
+    <EditorConfigFiles Remove="C:\Users\victo\Desktop\Core\.editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\victo\Desktop\SampleEFCoreApp\View\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="C:\Users\victo\Desktop\SampleEFCoreApp\View\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Components\Movies\AddMovieDialog.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-    <Content Update="Components\Movies\EditMovieDialog.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
+    <None Include="C:\Users\victo\Desktop\Core\.editorconfig" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,4 @@
 ﻿@page "/movie"
-@inject MovieService _service
-@inject IDialogService _dialogService
-
 
 <MudButton Class="mb-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
     <MudIcon Icon="@Icons.Material.Filled.Add" />
@@ -30,7 +27,7 @@
             <MudIconButton @onclick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete"></MudIconButton>
         </MudTd>
         <MudTd DataLabel="Editar">
-            <MudIconButton @onclick="() => OpenEditDialog(context.Id, context.Title, context.Description)" Icon="@Icons.Filled.Edit"></MudIconButton>
+            <MudIconButton @onclick="() => OpenEditDialog(context)" Icon="@Icons.Filled.Edit"></MudIconButton>
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -41,35 +38,41 @@
 }
 
 @code {
+    [Inject]
+    private IService<MovieModel> MovieService { get; set; }
+    [Inject]
+    private IDialogService DialogService { get; set; }
+    [Inject]
+    public IService<GenreModel> GenreService { get; set; }
     private IEnumerable<MovieModel> _movies = new List<MovieModel>();
     private bool _isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        _movies = await _service.GetAllAsync();
+        _movies = await MovieService.GetAllAsync();
         _isLoading = false;
     }
     private async Task Delete(int id)
     {
-        await _service.DeleteAsync(id);
+        await MovieService.DeleteAsync(id);
         await OnInitializedAsync();
     }
 
-    private async Task OpenAddDialog()
+    private void OpenAddDialog()
     {
         DialogOptions options = new DialogOptions() { CloseButton = true };
-        _dialogService.Show<AddMovieDialog>("Adicionar Filme", options);
+        DialogService.Show<AddMovieDialog>("Adicionar Filme", options);
     }
 
-    private void OpenEditDialog(int id, string movieTitle, string movieDescription)
+    private async Task OpenEditDialog(MovieModel movie)
     {
         DialogOptions options = new DialogOptions() { CloseButton = true };
 
+        var genres = await GenreService.GetAllAsync();
         DialogParameters parameters = new();
-        parameters.Add("Id", id);
-        parameters.Add("Title", movieTitle);
-        parameters.Add("Description", movieDescription);
+        parameters.Add("Movie", movie);
+        parameters.Add("Genres", genres);
 
-        _dialogService.Show(typeof(EditMovieDialog), "Editar Filme", parameters, options);
+        DialogService.Show(typeof(EditMovieDialog), "Editar Filme", parameters, options);
     }
 }

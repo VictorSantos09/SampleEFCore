@@ -7,5 +7,5 @@ public interface IService<T>
     Task<BaseDto> DeleteAsync(int id);
     Task<IEnumerable<T>> GetAllAsync();
     Task<T?> GetByIdAsync(int id);
-    Task<BaseDto> UpdateAsync(int modelId, T model);
+    Task<BaseDto> UpdateAsync(T modelUpdated);
 }

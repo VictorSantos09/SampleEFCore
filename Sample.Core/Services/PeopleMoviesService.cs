@@ -50,8 +50,8 @@ public class PeopleMoviesService : IPeopleMoviesService
 
     public async Task<BaseDto> WatchMovieAsync(int personId, int movieId)
     {
-        var hasPerson = _context.People.Contains(new PersonModel { Id = personId });
-        var hasMovie = _context.Movies.Contains(new MovieModel { Id = movieId });
+        bool hasPerson = _context.People.Contains(new PersonModel { Id = personId });
+        bool hasMovie = _context.Movies.Contains(new MovieModel { Id = movieId });
 
         if (hasPerson is false)
             return BaseDto.Build("pessoa não encontrada", false);

@@ -17,8 +17,8 @@ public class MovieService : IService<MovieModel>
 
     public async Task<BaseDto> CreateAsync(MovieModel movie)
     {
-        await _context.AddAsync(movie);
-        await _context.SaveChangesAsync();
+        _ = await _context.AddAsync(movie);
+        _ = await _context.SaveChangesAsync();
         return BaseDto.Build($"Filme {movie.Title} cadastrado", true, null);
     }
 
@@ -45,20 +45,20 @@ public class MovieService : IService<MovieModel>
         if (movieFound is null)
             return BaseDto.Build("filme não encontrado", false);
 
-        _context.Remove(movieFound);
+        _ = _context.Remove(movieFound);
         _ = await _context.SaveChangesAsync();
         return BaseDto.Build("filme removido", true);
     }
 
     public async Task<MovieModel?> GetByIdAsync(int id)
     {
-        var movieFound = await _context.FindAsync<MovieModel>(id);
+        MovieModel? movieFound = await _context.FindAsync<MovieModel>(id);
         return movieFound;
     }
 
     public async Task<IEnumerable<MovieModel>> GetAllAsync()
     {
-        var movieFound = await _context.Movies.Include(m => m.Genre).ToListAsync();
+        List<MovieModel> movieFound = await _context.Movies.Include(m => m.Genre).ToListAsync();
         return movieFound;
     }
 }

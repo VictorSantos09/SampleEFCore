@@ -42,8 +42,8 @@ public class GenreService : IGenreService
     public async Task<BaseDto> UpdateAsync(GenreModel genreUpdated)
     {
         GenreModel? genreFound = await GetByIdAsync(genreUpdated.Id);
-        
-        if(genreFound is not null)
+
+        if (genreFound is not null)
         {
             genreFound.Name = genreUpdated.Name;
             _ = _context.Update(genreFound);
@@ -57,7 +57,7 @@ public class GenreService : IGenreService
     public async Task<BaseDto> DeleteAsync(int id)
     {
         GenreModel? genreFound = await GetByIdAsync(id);
-        
+
         if (genreFound is null)
         {
             return BaseDto.Build("gênero não encontrado", false);

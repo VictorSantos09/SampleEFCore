@@ -6,7 +6,7 @@ public class GenreModel : IModel
     public int Id { get; set; }
 
     public string Name { get; set; }
-    
+
     public GenreModel(int id)
     {
         Id = id;

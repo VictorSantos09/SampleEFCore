@@ -33,7 +33,7 @@ public class PersonService : IService<PersonModel>
         {
             personFound.FirstName = personUpdated.FirstName;
             personFound.LastName = personUpdated.LastName;
-            
+
             _ = _context.Update(personFound);
             _ = _context.SaveChanges();
             return BaseDto.Build("pessoa atualizada", true);
@@ -54,13 +54,13 @@ public class PersonService : IService<PersonModel>
 
     public async Task<PersonModel?> GetByIdAsync(int id)
     {
-        var personFound = await _context.People.FindAsync(id);
+        PersonModel? personFound = await _context.People.FindAsync(id);
         return personFound;
     }
 
     public async Task<IEnumerable<PersonModel>> GetAllAsync()
     {
-        var peopleFound = await _context.People.ToListAsync();
+        List<PersonModel> peopleFound = await _context.People.ToListAsync();
         return peopleFound;
     }
 }

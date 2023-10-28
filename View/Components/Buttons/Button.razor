@@ -1,0 +1,15 @@
+﻿@inherits MudButton
+<MudButton Variant="BVariant" Color="BColor" OnClick="BOnClick" DisableElevation="HasElevation">@Message</MudButton>
+
+@code {
+    [Parameter]
+    public Variant BVariant { get; set; } = Variant.Filled;
+    [Parameter]
+    public Color BColor { get; set; } = Color.Primary;
+    [Parameter]
+    public string Message { get; set; }
+    [Parameter]
+    public bool HasElevation { get; set; } = true;
+    [Parameter]
+    public EventCallback BOnClick { get; set; }
+}

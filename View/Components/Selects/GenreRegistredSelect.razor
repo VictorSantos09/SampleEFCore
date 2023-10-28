@@ -1,6 +1,6 @@
-﻿@inject IService<GenreModel> _service
+﻿@inherits MudSelect<GenreModel>
 
-<MudSelect @bind-Value="_genre" Label="Gênero" Text="Selecione o gênero" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+<MudSelect T="GenreModel" Label="Gênero" Text="Selecione o gênero" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
     @foreach (var item in _genres)
     {
         <MudSelectItem T="GenreModel" Value="item">@item.Name</MudSelectItem>
@@ -8,11 +8,12 @@
 </MudSelect>
 
 @code {
+    [Inject]
+    private IService<GenreModel> GenreService { get; set; }
     private IEnumerable<GenreModel> _genres = new List<GenreModel>();
-    private PersonModel _genre = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _genres = await _service.GetAllAsync();
+        _genres = await GenreService.GetAllAsync();
     }
 }

@@ -1,34 +1,66 @@
-﻿@inject PeopleMoviesService _service
-@inject NavigationManager _navManager
-
-<MudDialog>
+﻿<MudDialog>
     <DialogContent>
         <MudPaper Class="pa-4">
             <MudForm @ref="_form" @bind-IsValid="@_success">
-                <PeopleRegistredSelect/>
-                <MovieRegistredSelect/>
+                <MudSelect @bind-Value="_selectedPerson" Label="Pessoa"
+                           Text="Selecione a pessoa" Immediate="true" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+                           Required="true" RequiredError="Selecione a pessoa">
+                    @foreach (var p in _people)
+                    {
+                        <MudSelectItem Value="p">
+                            @p.FullName
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect @bind-Value="_selectedMovie" Label="Filme"
+                           Text="Selecione o filme" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+                           Required="true" RequiredError="Selecione o filme">
+                    @foreach (var m in _movies)
+                    {
+                        <MudSelectItem Value="m">
+                            @m.Title
+                        </MudSelectItem>
+                    }
+                </MudSelect>
             </MudForm>
         </MudPaper>
         <MudPaper Class="d-block pa-4 mt-4">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(() => Submit())">Salvar</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.ResetAsync())" Class="mx-2">Apagar Dados</MudButton>
+            <Button Message="Salvar" BOnClick="@(() => Submit())" />
+            <Button Message="Apagar Dados" BOnClick="@(() => _form.ResetAsync())" Class="mx-2" />
         </MudPaper>
     </DialogContent>
 </MudDialog>
 
 @code {
+    [Inject]
+    private PeopleMoviesService Service { get; set; }
+    [Inject]
+    private IService<PersonModel> PersonService { get; set; }
+    [Inject]
+    private IService<MovieModel> MovieService { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+    private IEnumerable<PersonModel> _people = new List<PersonModel>();
+    private IEnumerable<MovieModel> _movies = new List<MovieModel>();
     private bool _success;
     private MudForm _form;
-    private int _movieId;
-    private int _personId;
+    private MovieModel _selectedMovie;
+    private PersonModel _selectedPerson;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _people = await PersonService.GetAllAsync();
+        _movies = await MovieService.GetAllAsync();
+    }
 
     private async Task Submit()
     {
         await _form.Validate();
         if (_form.IsValid)
         {
-            _ = await _service.WatchMovieAsync(6, 4);
-            _navManager.NavigateTo(_navManager.Uri, true);
+            _ = await Service.WatchMovieAsync(_selectedPerson.Id, _selectedMovie.Id);
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }
     }
 }

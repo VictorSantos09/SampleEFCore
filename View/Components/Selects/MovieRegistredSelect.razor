@@ -1,6 +1,6 @@
-﻿@inject IService<MovieModel> _service
+﻿@inherits MudSelect<MovieModel>
 
-<MudSelect @bind-Value="_movie" Label="Filme" Text="Selecione o filme" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+<MudSelect T="MovieModel" Label="Filme" Text="Selecione o filme" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
     @foreach (var item in _movies)
     {
         <MudSelectItem T="MovieModel" Value="item">@item.Title</MudSelectItem>
@@ -8,11 +8,13 @@
 </MudSelect>
 
 @code {
+    [Inject]
+    private IService<MovieModel> MovieService { get; set; }
     private IEnumerable<MovieModel> _movies = new List<MovieModel>();
     private MovieModel _movie = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _movies = await _service.GetAllAsync();
+        _movies = await MovieService.GetAllAsync();
     }
 }

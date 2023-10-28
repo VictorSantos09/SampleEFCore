@@ -1,19 +1,22 @@
-﻿@inject IService<PersonModel> _service
+﻿@inherits MudSelect<int>
 
-<MudSelect @bind-Value="_person" Label="Pessoa" Text="Selecione a pessoa" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+<MudSelect T="int" Label="Pessoa"
+           Text="Selecione a pessoa" Immediate="true" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
     @foreach (var item in _people)
     {
-        <MudSelectItem T="PersonModel" Value="item">@item.FullName</MudSelectItem>
+        <MudSelectItem Value="item.Id">
+            <MudText>@item.FullName</MudText>
+        </MudSelectItem>
     }
 </MudSelect>
 
 @code {
+    [Inject]
+    private IService<PersonModel> PersonService { get; set; }
     private IEnumerable<PersonModel> _people = new List<PersonModel>();
-    private PersonModel _person = new();
-
 
     protected override async Task OnInitializedAsync()
     {
-        _people = await _service.GetAllAsync();
+        _people = await PersonService.GetAllAsync();
     }
 }

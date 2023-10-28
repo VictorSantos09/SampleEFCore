@@ -14,11 +14,11 @@ public class SampleConfiguration
         _ = services.AddScoped<MovieService>();
         _ = services.AddScoped<GenreService>();
         _ = services.AddScoped<PeopleMoviesService>();
-        ConfigureServicesContracts(services);
+        ConfigureContracts(services);
         ConfigureDatabase(services);
     }
 
-    private static void ConfigureServicesContracts(IServiceCollection services)
+    private static void ConfigureContracts(IServiceCollection services)
     {
         _ = services.AddScoped<IService<PersonModel>, PersonService>();
         _ = services.AddScoped<IService<MovieModel>, MovieService>();

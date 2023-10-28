@@ -55,19 +55,24 @@ public class PeopleMoviesService
 
     public async Task<BaseDto> WatchMovieAsync(int personId, int movieId)
     {
-        PersonModel? person = await _personService.GetByIdAsync(personId);
-        MovieModel? movie = await _movieService.GetByIdAsync(movieId);
+        var existsPerson = _context.People.Contains(new PersonModel { Id = personId });
+        var existsMovie = _context.Movies.Contains(new MovieModel { Id = movieId });
 
-        if (person is null)
+        if (existsPerson is false)
             return BaseDto.Build("pessoa não encontrada", false);
 
-        if (movie is null)
+        if (existsMovie is false)
             return BaseDto.Build("filme não encontrado", false);
 
-        PeopleMoviesModel peopleMovies = new(person, movie, DateOnly.FromDateTime(DateTime.Now));
+        PeopleMoviesModel peopleMovies = new()
+        {
+            Date = DateOnly.FromDateTime(DateTime.Now),
+            PersonId = personId,
+            MovieId = movieId
+        };
 
-        _ = await _context.PeopleMovies.AddAsync(peopleMovies);
-        _ = await _context.SaveChangesAsync();
-        return BaseDto.Build($"{person.FirstName} assistiu o filme", true);
+        _ = await _context.AddAsync(peopleMovies);
+        _ = _context.SaveChanges();
+        return BaseDto.Build("salvo com sucesso", true);
     }
 }

@@ -14,9 +14,9 @@
                               Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsDescription))"
                 @bind-Value="Movie.Description" RequiredError="Descrição do filme é necessário" />
 
-                <MudSelect @bind-Value="Movie.Genre.Name" Label="Gênero" Text="@Movie.Genre.Name"
+                <MudSelect @bind-Value="_genreName" Label="Gênero" Text="@Movie.Genre.Name"
                            Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Required="true" RequiredError="Selecione o gênero do filme">
-                    @foreach (var g in Genres)
+                    @foreach (GenreModel g in Genres)
                     {
                         <MudSelectItem T="string" Value="g.Name">@g.Name</MudSelectItem>
                     }
@@ -30,22 +30,29 @@
 </MudDialog>
 
 @code {
+
     [Parameter]
     public MovieModel Movie { get; set; }
+
     [Parameter]
     public IEnumerable<GenreModel> Genres { get; set; }
+
     [Inject]
     private IGenreService GenreService { get; set; }
+
     [Inject]
     private NavigationManager NavigationManager { get; set; }
+
     [Inject]
     private IService<MovieModel> MovieService { get; set; }
+
     [Inject]
     private ISnackbar Snackbar { get; set; }
+
     private bool _success;
     private MudForm _form;
-    private int _genreId;
     private MovieModel _initialMovie;
+    private string _genreName;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -64,12 +71,15 @@
         if (_form.IsValid)
         {
             Snackbar.Add("Filme atualizado", Severity.Success);
-            var genre = await GenreService.GetByNameAsync(Movie.Genre.Name);
-            var originalMovie = await MovieService.GetByIdAsync(Movie.Id);
-            Movie.Genre = genre;
-            Movie.GenreId = genre.Id;
-            originalMovie = Movie;
-            await MovieService.UpdateAsync(Movie);
+            GenreModel genre = await GenreService.GetByNameAsync(_genreName);
+            MovieModel? originalMovie = await MovieService.GetByIdAsync(Movie.Id);
+
+            originalMovie.Title = Movie.Title;
+            originalMovie.Description = Movie.Description;
+            originalMovie.GenreId = genre.Id;
+            originalMovie.Genre = genre;
+
+            await MovieService.UpdateAsync(originalMovie);
             NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }
     }

@@ -37,7 +37,9 @@
 
 @if (_genres.Any() == false)
 {
-    <MudAlert Severity="Severity.Info">Nenhum gênero cadastrado</MudAlert>
+    <MudContainer Class="my-5">
+        <MudAlert Severity="Severity.Info">Nenhum gênero cadastrado</MudAlert>
+    </MudContainer>
 }
 
 @code {

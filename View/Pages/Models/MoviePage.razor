@@ -40,7 +40,9 @@
 
 @if (_movies.Any() == false)
 {
-    <MudAlert Severity="Severity.Info">Nenhum filme cadastrado</MudAlert>
+    <MudContainer Class="my-5">
+        <MudAlert Severity="Severity.Info">Nenhum filme cadastrado</MudAlert>
+    </MudContainer>
 }
 
 @code {

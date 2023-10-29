@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
 	  <TargetFramework>net7.0</TargetFramework>
@@ -24,16 +24,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Sample.Core.csproj" />
-    <ProjectReference Include="..\Sample.Core\Sample.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EditorConfigFiles Remove="C:\Users\victo\Desktop\SampleEFCoreApp\View\.editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="C:\Users\victo\Desktop\SampleEFCoreApp\View\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sample.Core\Sample.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

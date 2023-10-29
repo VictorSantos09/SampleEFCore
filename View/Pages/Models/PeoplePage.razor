@@ -41,7 +41,9 @@
 
 @if (_people.Any() == false)
 {
+    <MudContainer Class="my-5">
     <MudAlert Severity="Severity.Info">Nenhuma pessoa cadastrada</MudAlert>
+    </MudContainer>
 }
 
 @code {

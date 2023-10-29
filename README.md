@@ -8,7 +8,7 @@ O projeto consiste de um sistema de gerenciamento de cinema, onde é possível c
 
 ## Demonstração
 
-Insira um gif ou um link de alguma demonstração
+![Alt Text](DemoVideo.gif)
 
 
 ## Funcionalidades

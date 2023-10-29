@@ -17,21 +17,22 @@ public class MovieService : IService<MovieModel>
 
     public async Task<BaseDto> CreateAsync(MovieModel movie)
     {
-        await _context.AddAsync(movie);
-        await _context.SaveChangesAsync();
+        _ = await _context.AddAsync(movie);
+        _ = await _context.SaveChangesAsync();
         return BaseDto.Build($"Filme {movie.Title} cadastrado", true, null);
     }
 
-    public async Task<BaseDto> UpdateAsync(int modelId, MovieModel newMovie)
+    public async Task<BaseDto> UpdateAsync(MovieModel movieUpdated)
     {
-        MovieModel? movie = await _context.Movies.FindAsync(modelId);
-        if (movie is not null)
+        MovieModel? movieFound = await _context.Movies.FindAsync(movieUpdated.Id);
+        if (movieFound is not null)
         {
-            movie.Title = newMovie.Title;
-            movie.Description = newMovie.Description;
-            movie.GenreId = newMovie.GenreId;
-            movie.Genre = newMovie.Genre;
-            _ = _context.Update(movie);
+            movieFound.Title = movieUpdated.Title;
+            movieFound.Description = movieUpdated.Description;
+            movieFound.GenreId = movieUpdated.GenreId;
+            movieFound.Genre = movieUpdated.Genre;
+
+            _ = _context.Update(movieFound);
             _ = await _context.SaveChangesAsync();
             return BaseDto.Build("pessoa atualizada", true);
         }
@@ -40,22 +41,24 @@ public class MovieService : IService<MovieModel>
 
     public async Task<BaseDto> DeleteAsync(int id)
     {
-        MovieModel? movie = await _context.FindAsync<MovieModel>(id);
-        if (movie is null)
+        MovieModel? movieFound = await _context.FindAsync<MovieModel>(id);
+        if (movieFound is null)
             return BaseDto.Build("filme não encontrado", false);
 
-        _context.Remove(movie);
+        _ = _context.Remove(movieFound);
         _ = await _context.SaveChangesAsync();
         return BaseDto.Build("filme removido", true);
     }
 
     public async Task<MovieModel?> GetByIdAsync(int id)
     {
-        return await _context.FindAsync<MovieModel>(id);
+        MovieModel? movieFound = await _context.FindAsync<MovieModel>(id);
+        return movieFound;
     }
 
     public async Task<IEnumerable<MovieModel>> GetAllAsync()
     {
-        return await _context.Movies.Include(m => m.Genre).ToListAsync();
+        List<MovieModel> movieFound = await _context.Movies.Include(m => m.Genre).ToListAsync();
+        return movieFound;
     }
 }

@@ -26,14 +26,15 @@ public class PersonService : IService<PersonModel>
         return BaseDto.Build("pessoa adicionada", true);
     }
 
-    public async Task<BaseDto> UpdateAsync(int personId, PersonModel newPerson)
+    public async Task<BaseDto> UpdateAsync(PersonModel personUpdated)
     {
-        PersonModel? person = await _context.People.FindAsync(personId);
-        if (person is not null)
+        PersonModel? personFound = await _context.People.FindAsync(personUpdated.Id);
+        if (personFound is not null)
         {
-            person.FirstName = newPerson.FirstName;
-            person.LastName = newPerson.LastName;
-            _ = _context.Update(person);
+            personFound.FirstName = personUpdated.FirstName;
+            personFound.LastName = personUpdated.LastName;
+
+            _ = _context.Update(personFound);
             _ = _context.SaveChanges();
             return BaseDto.Build("pessoa atualizada", true);
         }
@@ -42,23 +43,24 @@ public class PersonService : IService<PersonModel>
 
     public async Task<BaseDto> DeleteAsync(int id)
     {
-        PersonModel? person = await GetByIdAsync(id);
-        if (person is null)
+        PersonModel? personFound = await GetByIdAsync(id);
+        if (personFound is null)
             return BaseDto.Build("pessoa não encontrada", false);
 
-        _ = _context.Remove(person);
+        _ = _context.Remove(personFound);
         _ = await _context.SaveChangesAsync();
         return BaseDto.Build("pessoa removida", false);
     }
 
     public async Task<PersonModel?> GetByIdAsync(int id)
     {
-        return await _context.People.FindAsync(id);
+        PersonModel? personFound = await _context.People.FindAsync(id);
+        return personFound;
     }
 
     public async Task<IEnumerable<PersonModel>> GetAllAsync()
     {
-        var result = await _context.People.ToListAsync();
-        return result;
+        List<PersonModel> peopleFound = await _context.People.ToListAsync();
+        return peopleFound;
     }
 }

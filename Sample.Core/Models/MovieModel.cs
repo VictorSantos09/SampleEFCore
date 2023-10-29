@@ -1,6 +1,8 @@
-﻿namespace Sample.Core.Models;
+﻿using Sample.Core.Models.Contracts;
 
-public class MovieModel
+namespace Sample.Core.Models;
+
+public class MovieModel : IModel
 {
     public int Id { get; set; }
     public int GenreId { get; set; }

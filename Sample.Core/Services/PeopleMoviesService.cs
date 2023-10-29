@@ -6,19 +6,13 @@ using Sample.Core.Services.Contracts;
 
 namespace Sample.Core.Services;
 
-public class PeopleMoviesService
+public class PeopleMoviesService : IPeopleMoviesService
 {
     private readonly SampleContext _context;
-    private readonly IService<PersonModel> _personService;
-    private readonly IService<MovieModel> _movieService;
 
-    public PeopleMoviesService(SampleContext context,
-        IService<PersonModel> personService,
-        IService<MovieModel> movieService)
+    public PeopleMoviesService(SampleContext context)
     {
         _context = context;
-        _personService = personService;
-        _movieService = movieService;
     }
 
     public Task<IEnumerable<PeopleMoviesModel>> GetAllAsync()
@@ -46,6 +40,7 @@ public class PeopleMoviesService
         {
             peopleMovie.PersonId = peopleMovieDto.PersonId;
             peopleMovie.MovieId = peopleMovieDto.MovieId;
+
             _ = _context.Update(peopleMovie);
             _ = _context.SaveChanges();
             return BaseDto.Build("pessoa atualizada", true);
@@ -55,13 +50,13 @@ public class PeopleMoviesService
 
     public async Task<BaseDto> WatchMovieAsync(int personId, int movieId)
     {
-        var existsPerson = _context.People.Contains(new PersonModel { Id = personId });
-        var existsMovie = _context.Movies.Contains(new MovieModel { Id = movieId });
+        bool hasPerson = _context.People.Contains(new PersonModel { Id = personId });
+        bool hasMovie = _context.Movies.Contains(new MovieModel { Id = movieId });
 
-        if (existsPerson is false)
+        if (hasPerson is false)
             return BaseDto.Build("pessoa não encontrada", false);
 
-        if (existsMovie is false)
+        if (hasMovie is false)
             return BaseDto.Build("filme não encontrado", false);
 
         PeopleMoviesModel peopleMovies = new()

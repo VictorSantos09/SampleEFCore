@@ -1,6 +1,8 @@
-﻿namespace Sample.Core.Models;
+﻿using Sample.Core.Models.Contracts;
 
-public class PeopleMoviesModel
+namespace Sample.Core.Models;
+
+public class PeopleMoviesModel : IModel
 {
     public int Id { get; set; }
     public int PersonId { get; set; }

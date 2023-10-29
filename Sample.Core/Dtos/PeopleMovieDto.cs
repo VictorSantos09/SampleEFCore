@@ -1,2 +1,2 @@
 ﻿namespace Sample.Core.Dtos;
-public record PeopleMovieDto (int PersonId, int MovieId);
+public record PeopleMovieDto(int PersonId, int MovieId);

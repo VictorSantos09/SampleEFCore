@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Sample.Core.Models.Contracts;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sample.Core.Models;
 
-public class PersonModel
+public class PersonModel : IModel
 {
     public int Id { get; set; }
     public string FirstName { get; set; }

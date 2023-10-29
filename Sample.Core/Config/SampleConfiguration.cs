@@ -14,6 +14,7 @@ public class SampleConfiguration
         _ = services.AddScoped<MovieService>();
         _ = services.AddScoped<GenreService>();
         _ = services.AddScoped<PeopleMoviesService>();
+
         ConfigureContracts(services);
         ConfigureDatabase(services);
     }
@@ -23,6 +24,8 @@ public class SampleConfiguration
         _ = services.AddScoped<IService<PersonModel>, PersonService>();
         _ = services.AddScoped<IService<MovieModel>, MovieService>();
         _ = services.AddScoped<IService<GenreModel>, GenreService>();
+        _ = services.AddScoped<IPeopleMoviesService, PeopleMoviesService>();
+        _ = services.AddScoped<IGenreService, GenreService>();
     }
 
     private static void ConfigureDatabase(IServiceCollection services)

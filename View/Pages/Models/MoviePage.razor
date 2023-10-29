@@ -1,9 +1,8 @@
 ﻿@page "/movie"
 
-<MudButton Class="mb-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
-    <MudIcon Icon="@Icons.Material.Filled.Add" />
-    Adicionar
-</MudButton>
+<div class="mb-5">
+<Button BIcon="@Icons.Filled.Add" Message="Adicionar" BOnClick="() => OpenAddDialog()"/>
+</div>
 
 <MudTable Items="@_movies" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_isLoading" LoadingProgressColor="Color.Info">
     <HeaderContent>
@@ -24,10 +23,11 @@
             @context.Genre.Name
         </MudTd>
         <MudTd DataLabel="Remover">
-            <MudIconButton @onclick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete"></MudIconButton>
+            <MudIconButton OnClick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete" Color="Color.Error"/>
         </MudTd>
         <MudTd DataLabel="Editar">
-            <MudIconButton @onclick="() => OpenEditDialog(context)" Icon="@Icons.Filled.Edit"></MudIconButton>
+            <MudIconButton OnClick="() => OpenEditDialog(context)" Icon="@Icons.Filled.Edit" Color="Color.Dark" />
+
         </MudTd>
     </RowTemplate>
 </MudTable>

@@ -1,11 +1,9 @@
 ﻿@page "/genre"
-@inject GenreService _service
-@inject IDialogService _dialogService
+<PageTitle>Gêneros</PageTitle>
 
-<MudButton Class="mb-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
-    <MudIcon Icon="@Icons.Material.Filled.Add" />
-    Adicionar
-</MudButton>
+<div class="mb-5">
+    <Button BIcon="@Icons.Filled.Add" Message="Adicionar" BOnClick="() => OpenAddDialog()" />
+</div>
 
 <MudTable Items="@_genres" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_isLoading" LoadingProgressColor="Color.Info">
     <HeaderContent>
@@ -18,10 +16,10 @@
             @context.Name
         </MudTd>
         <MudTd DataLabel="Remover">
-            <MudIconButton @onclick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete"></MudIconButton>
+            <MudIconButton OnClick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete" Color="Color.Error" />
         </MudTd>
         <MudTd DataLabel="Editar">
-            <MudIconButton @onclick="() => OpenEditDialog(context.Id, context.Name)" Icon="@Icons.Filled.Edit"></MudIconButton>
+            <MudIconButton OnClick="() => OpenEditDialog(context)" Icon="@Icons.Filled.Edit" Color="Color.Dark" />
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -32,35 +30,38 @@
 }
 
 @code {
+    [Inject]
+    private IGenreService GenreService { get; set; }
+    [Inject]
+    private IDialogService DialogService { get; set; }
     private IEnumerable<GenreModel> _genres = new List<GenreModel>();
     private bool _isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        _genres = await _service.GetAllAsync();
+        _genres = await GenreService.GetAllAsync();
         _isLoading = false;
     }
 
     private async Task Delete(int id)
     {
-        await _service.DeleteAsync(id);
+        await GenreService.DeleteAsync(id);
         await OnInitializedAsync();
     }
 
     private void OpenAddDialog()
     {
         DialogOptions options = new DialogOptions() { CloseButton = true };
-        _dialogService.Show<AddGenreDialog>("Adicionar Gênero", options);
+        DialogService.Show<AddGenreDialog>("Adicionar Gênero", options);
     }
 
-    private void OpenEditDialog(int id, string genreName)
+    private void OpenEditDialog(GenreModel genre)
     {
         DialogOptions options = new DialogOptions() { CloseButton = true };
 
         DialogParameters parameters = new();
-        parameters.Add("Id", id);
-        parameters.Add("GenreName", genreName);
+        parameters.Add("Genre", genre);
 
-        _dialogService.Show(typeof(EditGenreDialog), "Editar Gênero", parameters, options);
+        DialogService.Show(typeof(EditGenreDialog), "Editar Gênero", parameters, options);
     }
 }

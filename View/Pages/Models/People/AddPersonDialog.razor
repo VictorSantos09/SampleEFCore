@@ -1,0 +1,47 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudPaper Class="pa-4">
+            <MudForm @ref="_form" @bind-IsValid="@_success">
+                <MudTextField T="string" Label="Primeiro Nome" Required="true" @bind-Value="_firstName"
+                              Counter="PersonValidator.MaxCharactersAllowedFirstName"
+                              MaxLength="PersonValidator.MaxCharactersAllowedFirstName" Immediate="true"
+                              Validation="@(new Func<string, IEnumerable<string>>(PersonValidator.MaxDigitsFirstName))" RequiredError="Primeiro nome é necessário" />
+
+                <MudTextField T="string" Label="Segundo Nome" Required="true" @bind-Value="_lastName"
+                              Counter="PersonValidator.MaxCharactersAllowedLastName"
+                              MaxLength="PersonValidator.MaxCharactersAllowedLastName" Immediate="true"
+                              Validation="@(new Func<string, IEnumerable<string>>(PersonValidator.MaxDigitsLastName))" RequiredError="Segundo nome é necessário" />
+            </MudForm>
+        </MudPaper>
+        <MudPaper Class="d-block pa-4 mt-4">
+            <Button Message="Salvar" BOnClick="Submit" />
+            <Button BOnClick="() => _form.ResetAsync()" Message="Apagar Dados" BColorBackground="@(Colors.Red.Default)" />
+        </MudPaper>
+
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [Inject]
+    private IService<PersonModel> PersonService { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+    [Inject]
+    private ISnackbar Snackbar { get; set; }
+    private bool _success;
+    private MudForm _form;
+    private string _lastName;
+    private string _firstName;
+
+    private async Task Submit()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            Snackbar.Add("Pessoa adicionada", Severity.Success);
+            PersonModel person = new(_firstName, _lastName);
+            _ = await PersonService.CreateAsync(person);
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        }
+    }
+}

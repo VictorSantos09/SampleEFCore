@@ -3,11 +3,15 @@
         <MudPaper Class="pa-4">
             <MudForm @ref="_form" @bind-IsValid="@_success">
                 <MudTextField T="string" Text="@Movie.Title" Label="Título" Required="true"
-                              Counter="45" MaxLength="45" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsTitle))"
+                              Counter="MovieValidator.MaxCharactersAllowedTitle"
+                              MaxLength="MovieValidator.MaxCharactersAllowedTitle" Immediate="true"
+                              Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsTitle))"
                 @bind-Value="Movie.Title" RequiredError="Título do filme é necessário" />
 
-                <MudTextField Class="d-flex" T="string" Text="@Movie.Description" Label="Descrição" Required="true"
-                              Counter="200" MaxLength="200" Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsDescription))"
+                <MudTextField Lines="2" Class="d-flex" T="string" Text="@Movie.Description" Label="Descrição" Required="true"
+                              Counter="MovieValidator.MaxCharactersAllowedDescription"
+                              MaxLength="MovieValidator.MaxCharactersAllowedDescription"
+                              Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsDescription))"
                 @bind-Value="Movie.Description" RequiredError="Descrição do filme é necessário" />
 
                 <MudSelect @bind-Value="Movie.Genre.Name" Label="Gênero" Text="@Movie.Genre.Name"
@@ -20,7 +24,7 @@
             </MudForm>
         </MudPaper>
         <MudPaper Class="d-block pa-4 mt-4">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(() => Submit())">Salvar</MudButton>
+            <Button Message="Salvar" BOnClick="Submit" />
         </MudPaper>
     </DialogContent>
 </MudDialog>
@@ -31,11 +35,13 @@
     [Parameter]
     public IEnumerable<GenreModel> Genres { get; set; }
     [Inject]
-    private GenreService GenreService { get; set; }
+    private IGenreService GenreService { get; set; }
     [Inject]
     private NavigationManager NavigationManager { get; set; }
     [Inject]
-    private MovieService MovieService { get; set; }
+    private IService<MovieModel> MovieService { get; set; }
+    [Inject]
+    private ISnackbar Snackbar { get; set; }
     private bool _success;
     private MudForm _form;
     private int _genreId;
@@ -43,7 +49,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        _initialMovie = new MovieModel(Movie.Title, Movie.Description, Movie.Genre, Movie.GenreId) { Id = Movie.Id};
+        _initialMovie = new MovieModel(Movie.Title, Movie.Description, Movie.Genre, Movie.GenreId) { Id = Movie.Id };
     }
 
     private async Task Submit()
@@ -57,12 +63,13 @@
         await _form.Validate();
         if (_form.IsValid)
         {
+            Snackbar.Add("Filme atualizado", Severity.Success);
             var genre = await GenreService.GetByNameAsync(Movie.Genre.Name);
             var originalMovie = await MovieService.GetByIdAsync(Movie.Id);
             Movie.Genre = genre;
             Movie.GenreId = genre.Id;
             originalMovie = Movie;
-            await MovieService.UpdateAsync(originalMovie.Id, Movie);
+            await MovieService.UpdateAsync(Movie);
             NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }
     }

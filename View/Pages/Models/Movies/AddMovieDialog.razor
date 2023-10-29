@@ -1,0 +1,66 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper Class="pa-4">
+            <MudForm @ref="_form" @bind-IsValid="@_success">
+                <MudTextField T="string" Label="Título" Required="true" @bind-Value="_newMovie.Title"
+                              Counter="MovieValidator.MaxCharactersAllowedTitle"
+                              MaxLength="MovieValidator.MaxCharactersAllowedTitle" Immediate="true"
+                              Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsTitle))" RequiredError="Título do filme é necessário" />
+
+                <MudTextField Lines="2" T="string" Label="Descrição" Required="true" @bind-Value="_newMovie.Description"
+                              Counter="MovieValidator.MaxCharactersAllowedDescription"
+                              MaxLength="MovieValidator.MaxCharactersAllowedDescription" Immediate="true"
+                              Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsDescription))" RequiredError="Descrição do filme é necessário" />
+
+                <MudSelect T="string" @bind-Value="_genreName" Label="Selecione o Gênero" Required="true" OpenIcon="@Icons.Material.Filled.Category" AdornmentColor="Color.Dark">
+                    @foreach (GenreModel g in _genres)
+                    {
+                        <MudSelectItem Value="@g.Name">@g.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudForm>
+        </MudPaper>
+        <MudPaper Class="d-block pa-4 mt-4">
+            <Button Message="Salvar" BOnClick="Submit" />
+            <Button BOnClick="() => _form.ResetAsync()" Message="Apagar Dados" BColorBackground="@(Colors.Red.Default)" />
+        </MudPaper>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+    [Inject]
+    private IGenreService GenreService { get; set; }
+    [Inject]
+    private IService<MovieModel> MovieService { get; set; }
+    [Inject]
+    private IDialogService DialogService { get; set; }
+    [Inject]
+    private ISnackbar Snackbar { get; set; }
+    private bool _success;
+    private MudForm _form;
+    private string _genreName;
+    private MovieModel _newMovie = new();
+    private IEnumerable<GenreModel> _genres = new List<GenreModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _genres = await GenreService.GetAllAsync();
+    }
+
+    private async Task Submit()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            Snackbar.Add("Filme adicionado", Severity.Success);
+            var genre = await GenreService.GetByNameAsync(_genreName);
+            _newMovie.GenreId = genre.Id;
+            var result = await MovieService.CreateAsync(_newMovie);
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        }
+    }
+}

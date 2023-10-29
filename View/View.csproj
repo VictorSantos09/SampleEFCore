@@ -37,10 +37,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Components\Movies\AddMovieDialog.razor">
+    <Content Update="Pages\Models\Movies\AddMovieDialog.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Update="Components\Movies\EditMovieDialog.razor">
+    <Content Update="Pages\Models\Movies\EditMovieDialog.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>

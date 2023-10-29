@@ -1,61 +1,83 @@
 ﻿@page "/people"
-@inject PersonService _service
-@inject IDialogService _dialogService
-@inject NavigationManager _navManager
 
-<MudButton Class="mb-5" Color="Color.Primary" Variant="Variant.Filled" OnClick="() => OpenAddDialog()">
-    <MudIcon Icon="@Icons.Material.Filled.Add" />
-    Adicionar
-</MudButton>
+<PageTitle>Pessoas</PageTitle>
 
-@foreach (var p in _people)
-{
-    <MudCard Class="mt-5">
-        <MudCardContent>
-            <MudText>@p.FirstName</MudText>
-            <MudText Typo="Typo.body2">Nome Completo: @p.FullName</MudText>
-            <MudText Typo="Typo.body2">ID: @p.Id</MudText>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Variant="Variant.Text" Color="Color.Primary" @onclick="() => OpenEditDialog(p.Id, p.FirstName, p.LastName)">Editar</MudButton>
-            <MudButton Variant="Variant.Text" Color="Color.Primary" @onclick="() => Delete(p.Id)">Remover</MudButton>
-        </MudCardActions>
-    </MudCard>
-}
+<MudContainer Class="pb-10">
+    <MudText Typo="Typo.h3">
+        Gerenciar Pessoas
+    </MudText>
+
+    <MudText Typo="Typo.subtitle1">
+        Esta página permite que você gerencie as pessoas cadastradas no sistema.
+    </MudText>
+</MudContainer>
+
+<MudContainer Class="mb-5">
+    <Button Message="Adicionar" BIcon="@Icons.Material.Filled.Add" BOnClick="OpenAddDialog" />
+</MudContainer>
+
+<MudGrid>
+    @foreach (var p in _people)
+    {
+        <MudItem Class="mb-3" xl="3" lg=6 md="12">
+            <MudPaper Elevation="4" Outlined="true">
+                <MudCard>
+                    <MudCardContent>
+                        <MudCardHeader>@p.FirstName</MudCardHeader>
+                        <MudText Typo="Typo.body2">Nome Completo: @p.FullName</MudText>
+                        <MudText Typo="Typo.body2">ID: @p.Id</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <Button BVariant="Variant.Text" BColorBackground="@null" BColorText="@Colors.Blue.Default"
+                                Message="Editar" BOnClick="() => OpenEditDialog(p)" />
+                        <Button BVariant="Variant.Text" BColorBackground="@null" BColorText="@Colors.Red.Default"
+                                Message="Remover" BOnClick="() => Delete(p.Id)" />
+                    </MudCardActions>
+                </MudCard>
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>
 
 @if (_people.Any() == false)
 {
+    <MudContainer Class="my-5">
     <MudAlert Severity="Severity.Info">Nenhuma pessoa cadastrada</MudAlert>
+    </MudContainer>
 }
 
 @code {
+    [Inject]
+    private IService<PersonModel> PersonService { get; set; }
+    [Inject]
+    private IDialogService DialogService { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
     private IEnumerable<PersonModel> _people = new List<PersonModel>();
 
     protected override async Task OnInitializedAsync()
     {
-        _people = await _service.GetAllAsync();
+        _people = await PersonService.GetAllAsync();
     }
 
     private void OpenAddDialog()
     {
-        DialogOptions options = new() { CloseButton = true };
-        _dialogService.Show(typeof(AddPersonDialog), "Cadastrar Pessoa", options);
+        DialogOptions options = new() { CloseButton = true, DisableBackdropClick = true };
+        DialogService.Show(typeof(AddPersonDialog), "Cadastrar Pessoa", options);
     }
 
-    private void OpenEditDialog(int id, string firstName, string LastName)
+    private void OpenEditDialog(PersonModel person)
     {
         DialogParameters parameters = new();
-        parameters.Add("Id", id);
-        parameters.Add("FirstName", firstName);
-        parameters.Add("LastName", LastName);
+        parameters.Add("Person", person);
 
-        DialogOptions options = new() { CloseButton = true };
-        _dialogService.Show(typeof(EditPersonDialog), "Editar Pessoa", parameters, options);
+        DialogOptions options = new() { CloseButton = true, DisableBackdropClick = true };
+        DialogService.Show(typeof(EditPersonDialog), "Editar Pessoa", parameters, options);
     }
 
     private async Task Delete(int id)
     {
-        await _service.DeleteAsync(id);
-        _navManager.NavigateTo(_navManager.Uri, true);
+        await PersonService.DeleteAsync(id);
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
     }
 }

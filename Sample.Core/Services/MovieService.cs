@@ -17,7 +17,7 @@ public class MovieService : IService<MovieModel>
 
     public async Task<BaseDto> CreateAsync(MovieModel movie)
     {
-        _ = await _context.AddAsync(movie);
+        _ = await _context.Movies.AddAsync(movie);
         _ = await _context.SaveChangesAsync();
         return BaseDto.Build($"Filme {movie.Title} cadastrado", true, null);
     }

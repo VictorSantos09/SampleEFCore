@@ -1,0 +1,86 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudPaper Class="pa-4">
+            <MudForm @ref="_form" @bind-IsValid="@_success">
+                <MudTextField T="string" Text="@Movie.Title" Label="Título" Required="true"
+                              Counter="MovieValidator.MaxCharactersAllowedTitle"
+                              MaxLength="MovieValidator.MaxCharactersAllowedTitle" Immediate="true"
+                              Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsTitle))"
+                @bind-Value="Movie.Title" RequiredError="Título do filme é necessário" />
+
+                <MudTextField Lines="2" T="string" Text="@Movie.Description" Label="Descrição" Required="true"
+                              Counter="MovieValidator.MaxCharactersAllowedDescription"
+                              MaxLength="MovieValidator.MaxCharactersAllowedDescription"
+                              Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsDescription))"
+                @bind-Value="Movie.Description" RequiredError="Descrição do filme é necessário" />
+
+                <MudSelect @bind-Value="_genreName" Label="Gênero" Text="@Movie.Genre.Name"
+                           Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Required="true" RequiredError="Selecione o gênero do filme">
+                    @foreach (GenreModel g in Genres)
+                    {
+                        <MudSelectItem T="string" Value="g.Name">@g.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudForm>
+        </MudPaper>
+        <MudPaper Class="d-block pa-4 mt-4">
+            <Button Message="Salvar" BOnClick="Submit" />
+        </MudPaper>
+    </DialogContent>
+</MudDialog>
+
+@code {
+
+    [Parameter]
+    public MovieModel Movie { get; set; }
+
+    [Parameter]
+    public IEnumerable<GenreModel> Genres { get; set; }
+
+    [Inject]
+    private IGenreService GenreService { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    private IService<MovieModel> MovieService { get; set; }
+
+    [Inject]
+    private ISnackbar Snackbar { get; set; }
+
+    private bool _success;
+    private MudForm _form;
+    private MovieModel _initialMovie;
+    private string _genreName;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _initialMovie = new MovieModel(Movie.Title, Movie.Description, Movie.Genre, Movie.GenreId) { Id = Movie.Id };
+    }
+
+    private async Task Submit()
+    {
+        if (Movie.Equals(_initialMovie))
+            return;
+
+        if (ReferenceEquals(Movie, _initialMovie))
+            return;
+
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            Snackbar.Add("Filme atualizado", Severity.Success);
+            GenreModel genre = await GenreService.GetByNameAsync(_genreName);
+            MovieModel? originalMovie = await MovieService.GetByIdAsync(Movie.Id);
+
+            originalMovie.Title = Movie.Title;
+            originalMovie.Description = Movie.Description;
+            originalMovie.GenreId = genre.Id;
+            originalMovie.Genre = genre;
+
+            await MovieService.UpdateAsync(originalMovie);
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        }
+    }
+}

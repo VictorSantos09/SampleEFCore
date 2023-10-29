@@ -1,5 +1,12 @@
 ﻿@inherits MudButton
-<MudButton Variant="BVariant" Color="BColor" OnClick="BOnClick" DisableElevation="HasElevation">@Message</MudButton>
+<MudButton Variant="BVariant" Style="@($"color:{BColorText};background-color:{BColorBackground};")"
+Color="BColor" OnClick="@BOnClick" DisableElevation="HasElevation">
+    @if (BIcon is not null)
+    {
+        <MudIcon Icon="@BIcon" />
+    }
+    @Message
+</MudButton>
 
 @code {
     [Parameter]
@@ -12,4 +19,10 @@
     public bool HasElevation { get; set; } = true;
     [Parameter]
     public EventCallback BOnClick { get; set; }
+    [Parameter]
+    public string? BIcon { get; set; } = null;
+    [Parameter]
+    public string BColorText { get; set; }
+    [Parameter]
+    public string BColorBackground { get; set; } = Colors.LightBlue.Default;
 }

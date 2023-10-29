@@ -3,7 +3,7 @@
         <MudPaper Class="pa-4">
             <MudForm @ref="_form" @bind-IsValid="@_success">
                 <MudSelect @bind-Value="_selectedPerson" Label="Pessoa"
-                           Text="Selecione a pessoa" Immediate="true" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+                           Text="Selecione a pessoa" Immediate="true" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter"
                            Required="true" RequiredError="Selecione a pessoa">
                     @foreach (var p in _people)
                     {
@@ -14,7 +14,7 @@
                 </MudSelect>
 
                 <MudSelect @bind-Value="_selectedMovie" Label="Filme"
-                           Text="Selecione o filme" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter"
+                           Text="Selecione o filme" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter"
                            Required="true" RequiredError="Selecione o filme">
                     @foreach (var m in _movies)
                     {
@@ -27,7 +27,7 @@
         </MudPaper>
         <MudPaper Class="d-block pa-4 mt-4">
             <Button Message="Salvar" BOnClick="@(() => Submit())" />
-            <Button Message="Apagar Dados" BOnClick="@(() => _form.ResetAsync())" Class="mx-2" />
+            <Button Message="Apagar Dados" BColorBackground="@Colors.Red.Default" BOnClick="@(() => _form.ResetAsync())"/>
         </MudPaper>
     </DialogContent>
 </MudDialog>
@@ -41,6 +41,8 @@
     private IService<MovieModel> MovieService { get; set; }
     [Inject]
     private NavigationManager NavigationManager { get; set; }
+    [Inject]
+    private ISnackbar Snackbar { get; set; }
     private IEnumerable<PersonModel> _people = new List<PersonModel>();
     private IEnumerable<MovieModel> _movies = new List<MovieModel>();
     private bool _success;
@@ -59,6 +61,7 @@
         await _form.Validate();
         if (_form.IsValid)
         {
+            Snackbar.Add("Realizado com sucesso", Severity.Success);
             _ = await Service.WatchMovieAsync(_selectedPerson.Id, _selectedMovie.Id);
             NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }

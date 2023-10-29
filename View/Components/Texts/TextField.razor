@@ -1,0 +1,23 @@
+﻿<MudTextField T="string" Text="@TText" Label="@TLabel" Required="@IsRequired"
+              Counter="@TCounter"
+              MaxLength="@TMaxLength" Immediate="@IsImmediate"
+              Validation="@TValidation" RequiredError="@TRequiredError" />
+
+@code {
+    [Parameter]
+    public string TText { get; set; }
+    [Parameter]
+    public string TLabel { get; set; }
+    [Parameter]
+    public bool IsRequired { get; set; } = true;
+    [Parameter]
+    public bool IsImmediate { get; set; } = true;
+    [Parameter]
+    public int TCounter { get; set; }
+    [Parameter]
+    public int TMaxLength { get; set; }
+    [Parameter]
+    public EventCallback TValidation { get; set; }
+    [Parameter]
+    public string? TRequiredError { get; set; }
+}

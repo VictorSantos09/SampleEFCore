@@ -1,0 +1,28 @@
+﻿@inherits MudDialog
+<MudDialog>
+    <DialogContent>
+        <MudPaper Class="pa-4">
+            <MudForm @ref="_form">
+                <MudTextField T="string" Text="@DText" Label="@DLabel" Required="@IsRequired"
+                              Counter="45" MaxLength="45" Immediate="@IsImmediate"
+                              Validation="@DValidation" RequiredError="@DRequiredError" />
+            </MudForm>
+        </MudPaper>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public string DText { get; set; }
+    [Parameter]
+    public string DLabel { get; set; }
+    [Parameter]
+    public bool IsRequired { get; set; } = true;
+    [Parameter]
+    public string DRequiredError { get; set; }
+    [Parameter]
+    public bool IsImmediate { get; set; } = true;
+    [Parameter]
+    public object DValidation { get; set; }
+    private MudForm _form;
+}

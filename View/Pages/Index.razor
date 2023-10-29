@@ -1,10 +1,24 @@
 ﻿@page "/"
-
 <PageTitle>Início</PageTitle>
 
-<div class="mb-5">
+
+<MudContainer Class="pb-10">
+    <MudText Typo="Typo.h3">
+        Início
+    </MudText>
+
+    <MudText Typo="Typo.subtitle1">
+        Bem-vindo(a) ao sistema de gerenciamento de filmes!.
+    </MudText>
+
+    <MudText Typo="Typo.subtitle1">
+        Esta página permite que você veja os filmes e as pessoas que os assistiram.
+    </MudText>
+</MudContainer>
+
+<MudContainer Class="mb-5">
     <Button Message="Adicionar" BIcon="@Icons.Filled.Add" BOnClick="OpenAddDialog" />
-</div>
+</MudContainer>
 
 <MudDataGrid Items="@Elements" Filterable="true" FilterMode="@_filterMode" FilterCaseSensitivity="@_caseSensitivity">
     <Columns>
@@ -17,7 +31,6 @@
         <MudDataGridPager T="PeopleMoviesModel" />
     </PagerContent>
 </MudDataGrid>
-
 
 @code {
     [Inject]

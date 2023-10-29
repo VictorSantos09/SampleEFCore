@@ -1,28 +1,39 @@
 ﻿@page "/genre"
+
 <PageTitle>Gêneros</PageTitle>
 
-<div class="mb-5">
-    <Button BIcon="@Icons.Filled.Add" Message="Adicionar" BOnClick="() => OpenAddDialog()" />
-</div>
+<MudContainer Class="pb-10">
+    <MudText Typo="Typo.h3">
+        Gerenciar Gêneros
+    </MudText>
 
-<MudTable Items="@_genres" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_isLoading" LoadingProgressColor="Color.Info">
-    <HeaderContent>
-        <MudTh>Nome</MudTh>
-        <MudTh>Remover</MudTh>
-        <MudTh>Editar</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Nome">
-            @context.Name
-        </MudTd>
-        <MudTd DataLabel="Remover">
-            <MudIconButton OnClick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete" Color="Color.Error" />
-        </MudTd>
-        <MudTd DataLabel="Editar">
-            <MudIconButton OnClick="() => OpenEditDialog(context)" Icon="@Icons.Filled.Edit" Color="Color.Dark" />
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+    <MudText Typo="Typo.subtitle1">
+        Esta página permite que você gerencie os gêneros dos filmes cadastrados no sistema.
+    </MudText>
+</MudContainer>
+
+<MudContainer Class="mb-5">
+    <Button BIcon="@Icons.Filled.Add" Message="Adicionar" BOnClick="() => OpenAddDialog()" />
+</MudContainer>
+
+<MudGrid>
+    @foreach (var g in _genres)
+    {
+        <MudItem Class="mb-3" xl="3" lg=6 md="12">
+            <MudPaper Elevation="4" Outlined="true">
+                <MudCard Class="d-flex">
+                    <MudCardContent>
+                        <MudCardHeader>@g.Name</MudCardHeader>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudIconButton OnClick="() => OpenEditDialog(g)" Icon="@Icons.Filled.Edit" Color="Color.Dark" />
+                        <MudIconButton OnClick="() => Delete(g.Id)" Icon="@Icons.Filled.Delete" Color="Color.Error" />
+                    </MudCardActions>
+                </MudCard>
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>
 
 @if (_genres.Any() == false)
 {
@@ -35,12 +46,10 @@
     [Inject]
     private IDialogService DialogService { get; set; }
     private IEnumerable<GenreModel> _genres = new List<GenreModel>();
-    private bool _isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
         _genres = await GenreService.GetAllAsync();
-        _isLoading = false;
     }
 
     private async Task Delete(int id)

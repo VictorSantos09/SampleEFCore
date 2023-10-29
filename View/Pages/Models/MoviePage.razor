@@ -1,36 +1,42 @@
 ﻿@page "/movie"
 
-<div class="mb-5">
-<Button BIcon="@Icons.Filled.Add" Message="Adicionar" BOnClick="() => OpenAddDialog()"/>
-</div>
+<PageTitle>Filmes</PageTitle>
 
-<MudTable Items="@_movies" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_isLoading" LoadingProgressColor="Color.Info">
-    <HeaderContent>
-        <MudTh>Titulo</MudTh>
-        <MudTh>Descrição</MudTh>
-        <MudTh>Gênero</MudTh>
-        <MudTh>Remover</MudTh>
-        <MudTh>Editar</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Titulo">
-            @context.Title
-        </MudTd>
-        <MudTd DataLabel="Descrição">
-            @context.Description
-        </MudTd>
-        <MudTd DataLabel="Gênero">
-            @context.Genre.Name
-        </MudTd>
-        <MudTd DataLabel="Remover">
-            <MudIconButton OnClick="() => Delete(context.Id)" Icon="@Icons.Filled.Delete" Color="Color.Error"/>
-        </MudTd>
-        <MudTd DataLabel="Editar">
-            <MudIconButton OnClick="() => OpenEditDialog(context)" Icon="@Icons.Filled.Edit" Color="Color.Dark" />
+<MudContainer Class="pb-10">
+    <MudText Typo="Typo.h3">
+        Gerenciar Filmes
+    </MudText>
 
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+    <MudText Typo="Typo.subtitle1">
+        Esta página permite que você gerencie os filmes cadastradas no sistema.
+    </MudText>
+</MudContainer>
+
+<MudContainer Class="mb-5">
+    <Button BIcon="@Icons.Filled.Add" Message="Adicionar" BOnClick="() => OpenAddDialog()" />
+</MudContainer>
+
+<MudGrid>
+    @foreach (var m in _movies)
+    {
+        <MudItem Class="mb-3" xl="3" lg=6 md="12">
+            <MudPaper Elevation="4" Outlined="true">
+                <MudCard>
+                    <MudCardContent>
+                        <MudCardHeader>@m.Title</MudCardHeader>
+                        <MudText Typo="Typo.body2">Descrição: @m.Description</MudText>
+                        <MudText Typo="Typo.body2">Gênero: @m.Genre.Name</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudIconButton OnClick="() => Delete(m.Id)" Icon="@Icons.Filled.Delete" Color="Color.Error" />
+                        <MudIconButton OnClick="() => OpenEditDialog(m)" Icon="@Icons.Filled.Edit" Color="Color.Dark" />
+
+                    </MudCardActions>
+                </MudCard>
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>
 
 @if (_movies.Any() == false)
 {
@@ -60,14 +66,25 @@
 
     private void OpenAddDialog()
     {
-        DialogOptions options = new DialogOptions() { CloseButton = true };
+        DialogOptions options = new DialogOptions()
+            {
+                CloseButton = true,
+                DisableBackdropClick = true,
+                MaxWidth = MaxWidth.Large,
+                FullWidth = true
+            };
         DialogService.Show<AddMovieDialog>("Adicionar Filme", options);
     }
 
     private async Task OpenEditDialog(MovieModel movie)
     {
-        DialogOptions options = new DialogOptions() { CloseButton = true };
-
+        DialogOptions options = new DialogOptions()
+            {
+                CloseButton = true,
+                DisableBackdropClick = true,
+                MaxWidth = MaxWidth.Large,
+                FullWidth = true
+            };
         var genres = await GenreService.GetAllAsync();
         DialogParameters parameters = new();
         parameters.Add("Movie", movie);

@@ -2,26 +2,42 @@
 
 <PageTitle>Pessoas</PageTitle>
 
-<div class="mb-5">
-<Button Message="Adicionar" BIcon="@Icons.Material.Filled.Add" BOnClick="OpenAddDialog" />
-</div>
+<MudContainer Class="pb-10">
+    <MudText Typo="Typo.h3">
+        Gerenciar Pessoas
+    </MudText>
 
-@foreach (var p in _people)
-{
-    <MudCard Class="mt-5">
-        <MudCardContent>
-            <MudText>@p.FirstName</MudText>
-            <MudText Typo="Typo.body2">Nome Completo: @p.FullName</MudText>
-            <MudText Typo="Typo.body2">ID: @p.Id</MudText>
-        </MudCardContent>
-        <MudCardActions>
-            <Button BVariant="Variant.Text" BColorBackground="@null" BColorText="@Colors.Blue.Default" 
-            Message="Editar" BOnClick="() => OpenEditDialog(p)" />
-            <Button BVariant="Variant.Text" BColorBackground="@null" BColorText="@Colors.Red.Default" 
-            Message="Remover" BOnClick="() => Delete(p.Id)" />
-        </MudCardActions>
-    </MudCard>
-}
+    <MudText Typo="Typo.subtitle1">
+        Esta página permite que você gerencie as pessoas cadastradas no sistema.
+    </MudText>
+</MudContainer>
+
+<MudContainer Class="mb-5">
+    <Button Message="Adicionar" BIcon="@Icons.Material.Filled.Add" BOnClick="OpenAddDialog" />
+</MudContainer>
+
+<MudGrid>
+    @foreach (var p in _people)
+    {
+        <MudItem Class="mb-3" xl="3" lg=6 md="12">
+            <MudPaper Elevation="4" Outlined="true">
+                <MudCard>
+                    <MudCardContent>
+                        <MudCardHeader>@p.FirstName</MudCardHeader>
+                        <MudText Typo="Typo.body2">Nome Completo: @p.FullName</MudText>
+                        <MudText Typo="Typo.body2">ID: @p.Id</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <Button BVariant="Variant.Text" BColorBackground="@null" BColorText="@Colors.Blue.Default"
+                                Message="Editar" BOnClick="() => OpenEditDialog(p)" />
+                        <Button BVariant="Variant.Text" BColorBackground="@null" BColorText="@Colors.Red.Default"
+                                Message="Remover" BOnClick="() => Delete(p.Id)" />
+                    </MudCardActions>
+                </MudCard>
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>
 
 @if (_people.Any() == false)
 {
@@ -44,7 +60,7 @@
 
     private void OpenAddDialog()
     {
-        DialogOptions options = new() { CloseButton = true };
+        DialogOptions options = new() { CloseButton = true, DisableBackdropClick = true };
         DialogService.Show(typeof(AddPersonDialog), "Cadastrar Pessoa", options);
     }
 
@@ -53,7 +69,7 @@
         DialogParameters parameters = new();
         parameters.Add("Person", person);
 
-        DialogOptions options = new() { CloseButton = true };
+        DialogOptions options = new() { CloseButton = true, DisableBackdropClick = true };
         DialogService.Show(typeof(EditPersonDialog), "Editar Pessoa", parameters, options);
     }
 

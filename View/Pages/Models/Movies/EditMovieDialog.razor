@@ -8,7 +8,7 @@
                               Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsTitle))"
                 @bind-Value="Movie.Title" RequiredError="Título do filme é necessário" />
 
-                <MudTextField Lines="2" Class="d-flex" T="string" Text="@Movie.Description" Label="Descrição" Required="true"
+                <MudTextField Lines="2" T="string" Text="@Movie.Description" Label="Descrição" Required="true"
                               Counter="MovieValidator.MaxCharactersAllowedDescription"
                               MaxLength="MovieValidator.MaxCharactersAllowedDescription"
                               Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MovieValidator.MaxDigitsDescription))"

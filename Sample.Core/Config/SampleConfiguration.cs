@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sample.Core.Data;
 using Sample.Core.Models;
@@ -8,7 +11,7 @@ using Sample.Core.Services.Contracts;
 namespace Sample.Core.Config;
 public class SampleConfiguration
 {
-    public static void ConfigureServices(IServiceCollection services)
+    public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         _ = services.AddScoped<PersonService>();
         _ = services.AddScoped<MovieService>();
@@ -16,7 +19,8 @@ public class SampleConfiguration
         _ = services.AddScoped<PeopleMoviesService>();
 
         ConfigureContracts(services);
-        ConfigureDatabase(services);
+        ConfigureDatabase(services, configuration);
+        ConfigureIdentity(services);
     }
 
     private static void ConfigureContracts(IServiceCollection services)
@@ -28,14 +32,20 @@ public class SampleConfiguration
         _ = services.AddScoped<IGenreService, GenreService>();
     }
 
-    private static void ConfigureDatabase(IServiceCollection services)
+    private static void ConfigureDatabase(IServiceCollection services, IConfiguration configuration)
     {
-        string mySqlConnectionStr = "server=localhost; port=3306; database=test; user=root; password=root; Persist Security Info=False; Connect Timeout=300";
+        string mySqlConnectionStr = configuration.GetConnectionString("DefaultConnection")!; 
         _ = services.AddDbContextPool<SampleContext>(options =>
         {
             _ = options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr), x => x.MigrationsAssembly("View"));
         });
 
         _ = services.AddTransient<SampleContext>();
+    }
+
+    private static void ConfigureIdentity(IServiceCollection services)
+    {
+        _ = services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            .AddEntityFrameworkStores<SampleContext>();
     }
 }

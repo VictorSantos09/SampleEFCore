@@ -35,15 +35,19 @@ public class SampleContext : IdentityDbContext
             .HasKey(x => x.Id);
 
         _ = modelBuilder.Entity<IdentityUserLogin<string>>(e => e
+        .ToTable("IdentityUsersLogin")
         .HasKey(identity => identity.UserId));
 
         modelBuilder.Entity<IdentityUserRole<string>>()
-             .HasKey(e => new { e.UserId, e.RoleId });
+            .ToTable("IdentityUsersRoles")
+            .HasKey(e => new { e.UserId, e.RoleId });
 
         _ = modelBuilder.Entity<IdentityRole<string>>()
-          .HasKey(e => e.Id);
+            .ToTable("IdentityRoles")
+            .HasKey(e => e.Id);
 
         _ = modelBuilder.Entity<IdentityUserToken<string>>()
+            .ToTable("IdentityUsersTokens")
             .HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
     }
 }
